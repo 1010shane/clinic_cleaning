@@ -1,5 +1,8 @@
 import pandas as pd
 import re
+import numpy as np
+
+# /home/shane/Downloads/SHEPHERDS CLINIC 083120.xlsx
 
 raw_path = input("Give the absolute filepath of the sheet to be converted:") # get pathname (note MUST BE .XLSX file)
 
@@ -38,3 +41,33 @@ for i in range(row_number): #Iterate through every row
 name_split_df = new_df['full_name'].str.split(pat = ", ", expand = True)
 
 final_df = pd.concat([new_df.drop(labels = "full_name", axis = 1), name_split_df], axis = 1)
+
+final_df = final_df.rename(columns = {0: "Last", 1: "First"})
+
+final_df["Last"] = final_df["Last"].str.strip()
+
+final_df["First"] = final_df["First"].str.strip()
+
+final_df["Date_filled"] = final_df['drug'].str.extract("([0-9]{2}/[0-9]{2}/[0-9]{4})")
+
+final_df['Medication'] = final_df['drug'].str.extract("((?<=\ - )(.*?)(?=\\(DateFilled))", expand = False)[0]
+
+final_df['Dosage'] = final_df['Medication'].str.extract("([0-9].*$)")
+
+final_df['Medication'] = final_df['Medication'].str.extract("(^.*?(?=[0-9]))")
+
+final_df['Grant'] = np.NaN
+
+final_df['Pharmacy'] = np.NaN
+
+final_df['Refill_Date'] = np.NaN
+
+final_df['Notes'] = np.NaN
+
+final_df['Include'] = "Y"
+
+final_df = final_df.drop(columns = ['drug'])
+
+final_file_path = input("Give the absolute filepath of the desired output file (example: C:\Documents\excel_sheets\August_data_cleaned.xlsx):")
+
+final_df.to_excel(final_file_path, index = False)
