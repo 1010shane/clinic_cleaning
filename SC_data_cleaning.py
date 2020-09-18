@@ -3,8 +3,6 @@ import re
 import numpy as np
 import os, sys, subprocess
 
-# /home/shane/Downloads/SHEPHERDS CLINIC 083120.xlsx
-
 raw_path = input("Give the absolute filepath of the sheet to be converted:") # get pathname (note MUST BE .XLSX file)
 
 file_upload = 'incomplete'
